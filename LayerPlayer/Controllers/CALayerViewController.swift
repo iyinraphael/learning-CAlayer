@@ -41,11 +41,47 @@ class CALayerViewController: UIViewController {
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "DisplayLayerControls" {
+      (segue.destination as? CALayerControlsViewController)?.layerViewController = self
+    }
   }
 }
 
 // MARK: - Layer
 extension CALayerViewController {
   func setUpLayer() {
+    /**
+          1. You set the bounds of the layer, then set an image as the layer's constents.
+            Notice the use of the underlying CGImage
+     */
+    
+    layer.frame = viewForLayer.bounds
+    layer.contents = UIImage(named: "star")?.cgImage
+    
+    /**
+          2. Then you center the image within the layer. You can use contentsGravity to change both size
+          — as in resizing, resizing aspect and resizing aspect fill — and position — center, top, top-right, right, etc.
+          magnificationFilter controls the behavior of the enlarged image.
+     */
+    layer.contentsGravity = .center
+    layer.magnificationFilter = .linear
+    
+    /**
+          3. Next, you set CALayer‘s background color, make it round and add a border to it.
+          Notice that you’re using the underlying CGColor objects to change the layer’s color attributes.
+     */
+    layer.cornerRadius = 100.0
+    layer.borderWidth = 12.0
+    layer.borderColor = UIColor.white.cgColor
+    layer.backgroundColor = swiftOrangeColor.cgColor
+    
+    /**
+          4. Finally, you create a shadow for the layer. When isGeometryFlipped is true,
+          the positional geometry and shadow will be upside-down.
+     */
+    layer.shadowOpacity = 0.75
+    layer.shadowOffset = CGSize(width: 0, height: 3)
+    layer.shadowRadius = 3.0
+    layer.isGeometryFlipped = false
   }
 }

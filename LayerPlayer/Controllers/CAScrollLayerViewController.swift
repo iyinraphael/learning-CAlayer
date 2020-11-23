@@ -47,8 +47,47 @@ class CAScrollLayerViewController: UIViewController {
 // MARK: - IBActions
 extension CAScrollLayerViewController {
   @IBAction func panRecognized(_ sender: UIPanGestureRecognizer) {
+    
+    /**
+        When a pan gesture occurs, you calculate the corresponding translation required
+        and then call the scroll(to:) method on the CAScrollayer to move the image accordingly.
+     
+        scroll(to:) dosen't animate automatically, so you animate it explecitiy using UIView.animate(withDuration: animations:)
+     */
+    
+    var newPoint = scrollingView.bounds.origin
+    newPoint.x -= sender.translation(in: scrollingView).x
+    newPoint.y -= sender.translation(in: scrollingView).y
+    sender.setTranslation(.zero, in: scrollingView)
+    scrollingViewLayer.scroll(to: newPoint)
+    
+    if sender.state == .ended {
+      UIView.animate(withDuration: 0.3) {
+        self.scrollingViewLayer.scroll(to: CGPoint.zero)
+      }
+    }
   }
+  
+  
+  /**
+    Here are some rules of thumb for when to use - or not to use - CAScrollLayer
+        >   If you want something lightweight and you only neeed to scroll programmatically, consider using CAScrollLayer.
+        >   When you wnat the user to be able to scroll, you're better off with UIScrollView.
+        >   If you're scrolling a very large image, consider using CATiledLayer
+   */
 
   @IBAction func scrollingSwitchChanged(_ sender: UISwitch) {
+    
+    switch (horizontalScrollingSwitch.isOn, verticalScrollingSwitch.isOn) {
+    case (true, true):
+      scrollingViewLayer.scrollMode = .both
+    case (true, false):
+      scrollingViewLayer.scrollMode = .horizontally
+    case (false, true):
+      scrollingViewLayer.scrollMode = .vertically
+    default:
+      scrollingViewLayer.scrollMode = .none
+      
+    }
   }
 }

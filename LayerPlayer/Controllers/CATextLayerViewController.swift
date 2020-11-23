@@ -79,6 +79,28 @@ extension CATextLayerViewController {
       .joined(separator: " ")
 
     textLayer.string = string
+    
+    /**
+        1. You set the font of the text layer. Notice that this is a CTFont and not a UIFont.
+          You create these using CTFontCreateWithName(_:_:_:). CATextLayer lets you set the font size directly on the layer, as you do here.
+        
+        2. Next, you set the text color, wrapping, alignment and truncation modes. All of these are also available on a regular UILabel or UITextView.
+      
+        3. Finally, you set the layer’s contentsScale to match the screen’s scale. All layer classes,
+          not just CATextLayer, render at a scale factor of 1 by default. Attaching a layer to a view automatically sets its contentsScale to
+          the appropriate scale factor for the current screen. For any layer you create manually, however, you must set contentsScale explicitly.
+          Otherwise, its scale factor will be 1, causing it to appear pixelated on Retina displays.
+     */
+    
+    textLayer.font = helveticaFont
+    textLayer.fontSize = Constants.baseFontSize
+    
+    textLayer.foregroundColor = UIColor.darkGray.cgColor
+    textLayer.isWrapped = true
+    textLayer.alignmentMode = .left
+    textLayer.truncationMode = .end
+    
+    textLayer.contentsScale = UIScreen.main.scale
   }
 }
 
